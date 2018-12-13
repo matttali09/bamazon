@@ -1,0 +1,29 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "amazon like node app using js and sql",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matttali09/bamazon.git"
+  },
+  "keywords": [
+    "node",
+    "js",
+    "sql"
+  ],
+  "author": "Matt Taliancich",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matttali09/bamazon/issues"
+  },
+  "homepage": "https://github.com/matttali09/bamazon#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^6.2.1",
+    "mysql": "^2.16.0"
+  }
+}
