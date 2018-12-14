@@ -101,7 +101,7 @@ function promptUser() {
               console.log("You purchased: " + answer.number + " of the product: " + product_name)
 
               // store a variable for stock left
-              var stock_left = stock_quantity - answer.number
+              var stock_left = stock_quantity - parseInt(answer.number)
               // update the database
               connection.query(
                 "UPDATE product SET ? WHERE ?",
