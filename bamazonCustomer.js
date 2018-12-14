@@ -32,8 +32,8 @@ connection.connect(function (err) {
 
 // table to display the data
 var table = new Table({
-  head: ["ITEM ID".red, "PRODUCT NAME".blue, "DEPARTMENT".yellow, "PRICE".green, "STOCK QUANTITY".blue],
-  colWidths: [10, 20, 20, 10, 20]
+  head: ["ITEM ID".red, "PRODUCT NAME".blue, "DEPARTMENT".yellow, "PRODUCT SALES".cyan, "PRICE".green, "STOCK QUANTITY".blue],
+  colWidths: [10, 20, 20, 15, 10, 20]
 });
 
 // display the items available on the table include 
@@ -50,10 +50,11 @@ function displayData(err) {
         let item_id = res[i].item_id;
         let product_name = res[i].product_name;
         let department_name = res[i].department_name;
+        let product_sales = res[i].product_sales
         let price = res[i].price;
         let stock = res[i].stock_quantity;
 
-        table.push([item_id.toString().red, product_name.blue, department_name.yellow, price.toString().green, stock.toString().blue]);
+        table.push([item_id.toString().red, product_name.blue, department_name.yellow, product_sales.toString().cyan, price.toString().green, stock.toString().blue]);
       }
       console.log(table.toString());
       promptUser();
@@ -72,21 +73,23 @@ function promptUser() {
     })
     .then(function (answer) {
       // store a variable for the query we are going to look for by id chosen by the customer
-      var query = "SELECT product_name, stock_quantity, price FROM product WHERE ?";
+      var query = "SELECT product_name, stock_quantity, price, product_sales FROM product WHERE ?";
       // create function to select the product with that id
       connection.query(query, { item_id: answer.item_id }, function (err, res) {
         // initialize variables to hold the value of the name, stockquantity and price
         var product_name;
         var stock_quantity;
         var price;
+        var product_sales;
         for (var i in res) {
+          
           console.log("The product you selected was: " + res[i].product_name)
           // give the values to the variables for comparison and displaying for the user.
           product_name = res[i].product_name;
           stock_quantity = res[i].stock_quantity;
           price = res[i].price;
+          product_sales = res[i].product_sales
         }
-        // console.log(product_name)
 
         inquirer.prompt({
           name: "number",
@@ -102,6 +105,11 @@ function promptUser() {
 
               // store a variable for stock left
               var stock_left = stock_quantity - parseInt(answer.number)
+              // store number for the total to be used to update product sales and be displayed after
+              var total = parseInt(price) * parseInt(answer.number);
+              
+              var productSales = parseInt(product_sales) + parseInt(total);
+              
               // update the database
               connection.query(
                 "UPDATE product SET ? WHERE ?",
@@ -112,13 +120,28 @@ function promptUser() {
                   {
                     product_name: product_name
                   }
+                  
                 ],
                 function (err, res) {
                   //
                 }
               );
-              // find the total cost
-              var total = price * answer.number;
+              connection.query(
+                "UPDATE product SET ? WHERE ?",
+                [
+                  {
+                    product_sales: productSales
+                  },
+                  {
+                    product_name: product_name
+                  }
+                  
+                ],
+                function (err, res) {
+                  //
+                }
+              );
+              // display the user what the purchase price was and how many they bought
               console.log("The total price of your purcase of " + answer.number + " " + product_name + " was: " + total);
               displayData();
 
