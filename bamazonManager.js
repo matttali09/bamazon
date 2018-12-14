@@ -61,7 +61,7 @@ function promptUser() {
 // table to display the data
 var table = new Table({
     head: ["ITEM ID".red, "PRODUCT NAME".blue, "PRICE".green, "STOCK QUANTITY".yellow],
-    colWidths: [10, 20, 10, 20]
+    colWidths: [10, 20, 15, 20]
 });
 
 // display the items available on the table include 
@@ -80,7 +80,7 @@ function displayData(err) {
                 let price = res[i].price;
                 let stock = res[i].stock_quantity;
 
-                table.push([item_id.toString().red, product_name.blue, price.toString().green, stock.toString().yellow]);
+                table.push([item_id.toString().red, product_name.blue, "$".green+price.toString().green + ".00".green, stock.toString().yellow]);
             }
             console.log(table.toString());
             promptUser();

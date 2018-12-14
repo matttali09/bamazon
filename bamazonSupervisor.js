@@ -78,7 +78,7 @@ query += "= top5000.year) WHERE (top_albums.artist = ? AND top5000.artist = ?) O
                 let price = res[i].price;
                 let stock = res[i].stock_quantity;
 
-                table.push([item_id.toString().red, product_name.blue, price.toString().green, stock.toString().yellow]);
+                table.push([item_id.toString().red, product_name.blue, "$".green+price.toString().green + ".00".green, stock.toString().yellow]);
             }
             console.log(table.toString());
             promptUser();
