@@ -22,6 +22,7 @@ var connection = mysql.createConnection({
   database: "bamazonDB"
 });
 
+// connect to the sql database
 connection.connect(function (err) {
   if (err) throw err;
   // prompt the user
@@ -41,8 +42,8 @@ function displayData(err) {
 
   // empty the table before filling it again
   table.length = 0;
-  /*Create a table named "Bamazon":*/
-  connection.query( "Select * FROM product",
+  // Create a table from all the information in the response for the sql table. 
+  connection.query("Select * FROM product",
     function (err, res) {
       // use cli table to display the product by pushing the information to the defined array
       for (let i in res) {
@@ -55,7 +56,7 @@ function displayData(err) {
         table.push([item_id.toString().red, product_name.blue, department_name.yellow, price.toString().green, stock.toString().blue]);
       }
       console.log(table.toString());
-      promptUser();     
+      promptUser();
     });
 
 };
@@ -86,7 +87,7 @@ function promptUser() {
           price = res[i].price;
         }
         // console.log(product_name)
-        
+
         inquirer.prompt({
           name: "number",
           type: "input",
@@ -94,13 +95,14 @@ function promptUser() {
         })
           .then(function (answer) {
             // check if there is enough product in stock.
-            
-            if (answer.number <= stock_quantity)  {
+
+            if (answer.number <= stock_quantity) {
               // log to the user what they purchased
               console.log("You purchased: " + answer.number + " of the product: " + product_name)
-              // update the database
+
               // store a variable for stock left
               var stock_left = stock_quantity - answer.number
+              // update the database
               connection.query(
                 "UPDATE product SET ? WHERE ?",
                 [
@@ -119,7 +121,7 @@ function promptUser() {
               var total = price * answer.number;
               console.log("The total price of your purcase of " + answer.number + " " + product_name + " was: " + total);
               displayData();
-              
+
             }
             // else output an insufficient quantity message
             else {
