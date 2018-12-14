@@ -33,7 +33,7 @@ connection.connect(function (err) {
 // table to display the data
 var table = new Table({
   head: ["ITEM ID".red, "PRODUCT NAME".blue, "DEPARTMENT".yellow, "PRODUCT SALES".cyan, "PRICE".green, "STOCK QUANTITY".blue],
-  colWidths: [10, 20, 20, 15, 10, 20]
+  colWidths: [10, 20, 20, 15, 15, 20]
 });
 
 // display the items available on the table include 
@@ -54,7 +54,7 @@ function displayData(err) {
         let price = res[i].price;
         let stock = res[i].stock_quantity;
 
-        table.push([item_id.toString().red, product_name.blue, department_name.yellow, product_sales.toString().cyan, price.toString().green, stock.toString().blue]);
+        table.push([item_id.toString().red, product_name.blue, department_name.yellow, "$".cyan+product_sales.toString().cyan + ".00".cyan, "$".green+price.toString().green + ".00".green, stock.toString().blue]);
       }
       console.log(table.toString());
       promptUser();
