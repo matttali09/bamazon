@@ -8,17 +8,17 @@ var Table = require("cli-table");
 var colors = require('colors');
 
 var connection = mysql.createConnection({
-  host: "localhost",
+    host: "localhost",
 
-  // Your port; if not 3306
-  port: 3306,
+    // Your port; if not 3306
+    port: 3306,
 
-  // Your username
-  user: "root",
+    // Your username
+    user: "root",
 
-  // Your password
-  password: "root",
-  database: "bamazonDB"
+    // Your password
+    password: "root",
+    database: "bamazonDB"
 });
 
 // connect to the sql database
@@ -26,7 +26,7 @@ connection.connect(function (err) {
     if (err) throw err;
     // prompt the user
     promptUser();
-  
+
 });
 
 function promptUser() {
@@ -43,7 +43,7 @@ function promptUser() {
     ]).then(function (user) {
 
         // if the manager chooses view every available item's item IDs, names, prices, and quantities.
-        if (user.doingWhat === "View Products for Sale") {
+        if (user.doingWhat === "View Product Sales by Department") {
             displayData();
         }
         else {
@@ -54,8 +54,8 @@ function promptUser() {
 
 // table to display the data
 var table = new Table({
-    head: ["ITEM ID".red, "PRODUCT NAME".blue, "PRICE".green, "STOCK QUANTITY".yellow],
-    colWidths: [10, 20, 10, 20]
+    head: ["DEPARTMENT ID".red, "DEPARTMENT NAME".blue, "OVER HEAD COSTS".green, "PRODUCT SALES".yellow, "TOTAL PROFIT".blue],
+    colWidths: [15, 20, 25, 20, 20]
 });
 
 // display the items available on the table include 
@@ -65,21 +65,22 @@ function displayData(err) {
     // empty the table before filling it again
     table.length = 0;
     // store query to get data from both databases
-    var query = "SELECT top_albums.year, top_albums.album, top_albums.position, top5000.song, top5000.artist ";
-query += "FROM top_albums INNER JOIN top5000 ON (top_albums.artist = top5000.artist AND top_albums.year ";
-query += "= top5000.year) WHERE (top_albums.artist = ? AND top5000.artist = ?) ORDER BY top_albums.year ";
+    var query = "SELECT product.department_name, product.product_sales, department.department_id, department.department_name, department.over_head_costs FROM department INNER JOIN product ON (product.department_name = department.department_name) ORDER BY department.department_id ";
     // Create a table from all the information in the response for the sql table. 
-    connection.query("Select * FROM product",
+    connection.query(query,
         function (err, res) {
             // use cli table to display the product by pushing the information to the defined array
             for (let i in res) {
-                let item_id = res[i].item_id;
-                let product_name = res[i].product_name;
-                let price = res[i].price;
-                let stock = res[i].stock_quantity;
+                let department_id = res[i].department_id;
+                let department_name = res[i].department_name;
+                let over_head_costs = res[i].over_head_costs;
+                let product_sales = res[i].product_sales;
+                let total_profit = product_sales - over_head_costs;
+                
 
-                table.push([item_id.toString().red, product_name.blue, "$".green+price.toString().green + ".00".green, stock.toString().yellow]);
+                table.push([department_id.toString().red, department_name.blue, "$".green + over_head_costs.toString().green + ".00".green, product_sales.toString().yellow, "$".green + total_profit.toString().green + ".00".green]);
             }
+            
             console.log(table.toString());
             promptUser();
         });
