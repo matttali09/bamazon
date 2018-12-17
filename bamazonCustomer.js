@@ -142,7 +142,7 @@ function promptUser() {
                 }
               );
               // display the user what the purchase price was and how many they bought
-              console.log("The total price of your purcase of " + answer.number + " " + product_name + " was: " + total);
+              console.log("The total price of your purcase of " + answer.number + " " + product_name + " was: $" + total + ".00");
               displayData();
 
             }
